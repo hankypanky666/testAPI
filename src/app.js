@@ -3,8 +3,33 @@ import {HttpClient} from './libs/HttpClient';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
+const template = `<div id="wrapper">
+    <input type="text" id="filterTable" placeholder="name">
+    <div id="list">
+        <table id="table">
+            <thead>
+            <tr>
+                <th>name</th>
+                <th>link</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+    <div id="actions">
+        <button id="prev"><</button>
+        <span id="currentPage"></span> / <span id="totalPages"></span>
+        <button id="next">></button>
+        jump to <input type="number" id="jumpTo" min="0">
+        <a href="#details/22">www</a>
+    </div>
+</div>`
+
 export class App {
 	constructor() {
+		document.body.innerHTML = template; // lifehack xd
 		this.http = new HttpClient();
 		this.currPage$ = new BehaviorSubject(0);
 		this.currPage = document.querySelector('#currentPage');
