@@ -1,6 +1,7 @@
 import {API, URL} from './config/app.config';
 import {HttpClient} from './libs/HttpClient';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 export class App {
 	constructor() {
