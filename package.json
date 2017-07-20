@@ -1,0 +1,25 @@
+{
+  "name": "testapi",
+  "version": "1.0.0",
+  "description": "test task",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "watch": "webpack --watch",
+    "start": "webpack-dev-server --open"
+  },
+  "author": "Artsiom Menshakou",
+  "license": "ISC",
+  "devDependencies": {
+    "html-webpack-plugin": "^2.29.0",
+    "webpack": "^3.3.0",
+    "webpack-dev-server": "^2.5.1"
+  },
+  "dependencies": {
+    "clean-webpack-plugin": "^0.1.16",
+    "handlebars": "^4.0.10",
+    "handlebars-loader": "^1.5.0",
+    "rxjs": "^5.4.2"
+  }
+}
