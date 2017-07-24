@@ -1,7 +1,7 @@
-import {API, URL} from './config/app.config';
+import {API, URL, URL_DETAILS} from './config/app.config';
 import {HttpClient} from './libs/HttpClient';
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import {Observable} from 'rxjs/Observable';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
 const template = `<div id="wrapper">
     <input type="text" id="filterTable" placeholder="name">
@@ -23,15 +23,19 @@ const template = `<div id="wrapper">
         <span id="currentPage"></span> / <span id="totalPages"></span>
         <button id="next">></button>
         jump to <input type="number" id="jumpTo" min="0">
-        <a href="#details/22">www</a>
     </div>
-</div>`
+</div>`;
 
 export class App {
 	constructor() {
-		document.body.innerHTML = template; // lifehack xd
 		this.http = new HttpClient();
 		this.currPage$ = new BehaviorSubject(0);
+		// this.init();
+	}
+
+	init() {
+		document.body.innerHTML = template; // lifehack xd
+
 		this.currPage = document.querySelector('#currentPage');
 		this.prev = document.querySelector('#prev');
 		this.next = document.querySelector('#next');
@@ -56,7 +60,7 @@ export class App {
 
 		this.jumpTo$
 			.subscribe(res => {
-				this._getAsteroids(`${URL}page=${res.target.value}&size=20&${API}`);
+				this.getAsteroids(`${URL}page=${res.target.value}&size=20&${API}`);
 			})
 
 		this.filter$ = Observable.create(observer => {
@@ -72,7 +76,7 @@ export class App {
 		this.merger$ = Observable.merge(this.next$, this.prev$);
 		this.merger$
 			.subscribe(res => {
-				this._getAsteroids(res.target.value);
+				this.getAsteroids(res.target.value);
 			})
 
 		this.currPage$.subscribe(res => {
@@ -84,19 +88,15 @@ export class App {
 			}
 		})
 
-		this.init();
+		this.getAsteroids();
+
 	}
 
-	init() {
-		console.log('start app');
-
-		this._getAsteroids();
-	}
-
-	_getAsteroids(url = '') {
+	getAsteroids(url = '') {
 		this.http.getReq(url ? url : URL + API)
 			.take(1)
 			.subscribe(res => {
+				console.log('result: ', res);
 				this.items = res.near_earth_objects;
 				this._generateList(res.near_earth_objects);
 				this._createActions(res.links.prev, res.links.self, res.links.next, res.page.number, res.page.total_pages);
@@ -124,10 +124,17 @@ export class App {
 
 			const tdLink = tr.appendChild(document.createElement('td'));
 			const tdLinkHref = tdLink.appendChild(document.createElement('a'));
-			tdLinkHref.href = i.links.self;
+			tdLinkHref.href = `#details/${i.neo_reference_id}`;
 			tdLinkHref.textContent = 'more...';
 			// tdLink.innerHTML = i.links.self;
 		});
+	}
+
+	getDeatils(id) {
+		return this.http.getReq(`${URL_DETAILS}${id}?${API}`)
+			.map(res => {
+				document.body.innerHTML = res.name;
+			})
 	}
 
 }

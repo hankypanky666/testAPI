@@ -1,18 +1,21 @@
-import { App } from './app';
+import {App} from './app';
 import rlite from 'rlite-router';
 
-// create template
-document.addEventListener("DOMContentLoaded", function() {
-	// boostrap
-	const route = rlite(notFound, {
+let app = new App();
+
+window.onload = function () {
+	const route = rlite(notFound, { // without save route state
 		'': () => {
-			setTimeout(() => {
-				new App()
-			}, 0);
+			app.init();
+			return 'loading...';
 		},
 
 		'details/:id': function ({id}) {
-			return id;
+			app.getDeatils(id)
+				.subscribe(() => {
+					},
+					err => notFound());
+			return 'loading...';
 		}
 	});
 
@@ -20,15 +23,17 @@ document.addEventListener("DOMContentLoaded", function() {
 		return '<h1>404 Not found :/</h1>';
 	}
 
-// Hash-based routing
+	// Hash-based routing
 	function processHash() {
 		const hash = location.hash || '#';
-
 		// Do something useful with the result of the route
-		document.body.textContent = route(hash.slice(1));
+		// document.body.innerHTML = route(hash.slice(1));
+		route(hash.slice(1));
 	}
 
 	window.addEventListener('hashchange', processHash);
 	processHash();
-});
+
+}
+
 
